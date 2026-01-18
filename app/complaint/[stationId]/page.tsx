@@ -49,7 +49,7 @@ export default function ComplaintFormPage() {
     const loadStation = async () => {
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/stations/${stationId}`
+                `/api/stations/${stationId}`
             );
             if (!response.ok) {
                 throw new Error('Station not found');
@@ -90,11 +90,11 @@ export default function ComplaintFormPage() {
             submitData.append('description', formData.description);
 
             files.forEach((file) => {
-                submitData.append('media', file);
+                submitData.append('files', file);
             });
 
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/complaints`,
+                `/api/complaints`,
                 {
                     method: 'POST',
                     body: submitData,

@@ -49,7 +49,7 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
   const loadStations = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stations`, {
+      const response = await fetch(`/api/stations`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -66,7 +66,7 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
 
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stations/${stationId}`, {
+      const response = await fetch(`/api/stations/${stationId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });

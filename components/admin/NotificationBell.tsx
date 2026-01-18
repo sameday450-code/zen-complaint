@@ -57,7 +57,7 @@ export default function NotificationBell({ socket }: Props) {
   const loadNotifications = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications`, {
+      const response = await fetch(`/api/notifications`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
@@ -103,9 +103,13 @@ export default function NotificationBell({ socket }: Props) {
   const markAllAsRead = async () => {
     const token = localStorage.getItem('token');
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/notifications/mark-all-read`, {
-        method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}` },
+      await fetch(`/api/notifications/mark-read`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ notificationIds: notifications.filter(n => !n.isRead).map(n => n.id) })
       });
       loadNotifications();
       setUnreadCount(0);

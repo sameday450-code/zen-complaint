@@ -59,8 +59,8 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
     const loadComplaints = async () => {
         const token = localStorage.getItem('token');
         const url = stationId
-            ? `${process.env.NEXT_PUBLIC_API_URL}/api/complaints?stationId=${stationId}`
-            : `${process.env.NEXT_PUBLIC_API_URL}/api/complaints`;
+            ? `/api/complaints?stationId=${stationId}`
+            : `/api/complaints`;
 
         try {
             const response = await fetch(url, {
@@ -79,9 +79,9 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
         const token = localStorage.getItem('token');
         try {
             const response = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/complaints/${complaintId}/status`,
+                `/api/complaints/${complaintId}`,
                 {
-                    method: 'PATCH',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${token}`,

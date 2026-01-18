@@ -45,7 +45,7 @@ export default function EditStationModal({ station, onClose, onSuccess }: Props)
     const token = localStorage.getItem('token');
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stations/${station.id}`, {
+      const response = await fetch(`/api/stations/${station.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

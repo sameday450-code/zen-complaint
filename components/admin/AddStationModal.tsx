@@ -24,7 +24,7 @@ export default function AddStationModal({ onClose, onSuccess }: Props) {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stations`, {
+            const response = await fetch(`/api/stations`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

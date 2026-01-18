@@ -68,10 +68,10 @@ export default function AdminDashboard() {
         const token = localStorage.getItem('token');
         try {
             const [stationsRes, complaintsRes] = await Promise.all([
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stations`, {
+                fetch(`/api/stations`, {
                     headers: { Authorization: `Bearer ${token}` },
                 }),
-                fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/complaints`, {
+                fetch(`/api/complaints`, {
                     headers: { Authorization: `Bearer ${token}` },
                 }),
             ]);
