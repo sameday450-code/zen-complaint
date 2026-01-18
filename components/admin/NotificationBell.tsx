@@ -61,7 +61,7 @@ export default function NotificationBell({ socket }: Props) {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await response.json();
-      setNotifications(data);
+      setNotifications(data.notifications || []);
     } catch (error) {
       console.error('Failed to load notifications:', error);
     }
@@ -71,13 +71,13 @@ export default function NotificationBell({ socket }: Props) {
     const token = localStorage.getItem('token');
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/notifications/unread-count`,
+        `/api/notifications?unreadOnly=true`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
       const data = await response.json();
-      setUnreadCount(data.count);
+      setUnreadCount(data.total || 0);
     } catch (error) {
       console.error('Failed to load unread count:', error);
     }
@@ -87,10 +87,14 @@ export default function NotificationBell({ socket }: Props) {
     const token = localStorage.getItem('token');
     try {
       await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/notifications/${notificationId}/read`,
+        `/api/notifications/mark-read`,
         {
-          method: 'PATCH',
-          headers: { Authorization: `Bearer ${token}` },
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ notificationIds: [notificationId] })
         }
       );
       loadNotifications();
