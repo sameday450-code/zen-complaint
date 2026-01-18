@@ -18,7 +18,7 @@ export default function HomePage() {
         >
             {/* Success Modal */}
             <Suspense fallback={null}>
-                <SuccessModalHandler />
+                <SuccessModal />
             </Suspense>
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/30 backdrop-brightness-90"></div>
