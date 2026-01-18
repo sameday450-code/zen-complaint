@@ -99,6 +99,35 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
         }
     };
 
+    const deleteComplaint = async (complaintId: string) => {
+        if (!confirm('Are you sure you want to delete this complaint? This action cannot be undone.')) {
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            const response = await fetch(
+                `/api/complaints/${complaintId}`,
+                {
+                    method: 'DELETE',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.ok) {
+                loadComplaints();
+                onStatsUpdate();
+            } else {
+                alert('Failed to delete complaint');
+            }
+        } catch (error) {
+            console.error('Failed to delete complaint:', error);
+            alert('Failed to delete complaint');
+        }
+    };
+
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'pending':
@@ -230,16 +259,28 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
                             )}
                         </div>
 
-                        <select
-                            value={complaint.status}
-                            onChange={(e) => updateStatus(complaint.id, e.target.value)}
-                            className="px-4 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-blue-400 transition-all cursor-pointer"
-                        >
-                            <option value="pending">Pending</option>
-                            <option value="in-progress">In Progress</option>
-                            <option value="resolved">Resolved</option>
-                            <option value="closed">Closed</option>
-                        </select>
+                        <div className="flex items-center gap-2">
+                            <select
+                                value={complaint.status}
+                                onChange={(e) => updateStatus(complaint.id, e.target.value)}
+                                className="px-4 py-2.5 text-sm font-medium border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-blue-400 transition-all cursor-pointer"
+                            >
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="resolved">Resolved</option>
+                                <option value="closed">Closed</option>
+                            </select>
+                            <button
+                                onClick={() => deleteComplaint(complaint.id)}
+                                className="px-4 py-2.5 text-sm font-medium bg-red-500 text-white rounded-xl hover:bg-red-600 focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all flex items-center gap-2"
+                                title="Delete complaint"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                                Delete
+                            </button>
+                        </div>
                     </div>
                 </div>
             ))}
