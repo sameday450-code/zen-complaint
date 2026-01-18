@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate",
     "network-ip": "node get-network-ip.js",
     "server": "ts-node --project tsconfig.server.json server/index.ts",
     "server:dev": "nodemon --exec ts-node --project tsconfig.server.json server/index.ts",
