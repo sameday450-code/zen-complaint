@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      String    @default("admin")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([email])
+  @@map("admins")
+}
+
+model Station {
+  id          String      @id @default(uuid())
+  name        String
+  location    String?
+  description String?
+  qrCodeUrl   String?
+  qrCodeData  String      @unique
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  deletedAt   DateTime?
+  complaints  Complaint[]
+
+  @@index([qrCodeData])
+  @@index([isActive])
+  @@map("stations")
+}
+
+model Complaint {
+  id               String         @id @default(uuid())
+  stationId        String
+  customerName     String
+  customerPhone    String
+  category         String
+  description      String
+  status           String         @default("pending")
+  priority         String         @default("normal")
+  submissionMethod String
+  ipAddress        String?
+  userAgent        String?
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  resolvedAt       DateTime?
+  deletedAt        DateTime?
+  station          Station        @relation(fields: [stationId], references: [id], onDelete: Cascade)
+  mediaFiles       MediaFile[]
+  notifications    Notification[]
+  voiceCall        VoiceCall?
+
+  @@index([stationId])
+  @@index([status])
+  @@index([createdAt])
+  @@index([submissionMethod])
+  @@map("complaints")
+}
+
+model MediaFile {
+  id           String    @id @default(uuid())
+  complaintId  String
+  fileName     String
+  originalName String
+  fileType     String
+  fileSize     Int
+  fileUrl      String
+  storageKey   String
+  uploadedAt   DateTime  @default(now())
+  deletedAt    DateTime?
+  complaint    Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@index([complaintId])
+  @@map("media_files")
+}
+
+model Notification {
+  id          String     @id @default(uuid())
+  complaintId String?
+  title       String
+  message     String
+  type        String
+  isRead      Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  readAt      DateTime?
+  complaint   Complaint? @relation(fields: [complaintId], references: [id])
+
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model VoiceCall {
+  id            String    @id @default(uuid())
+  complaintId   String    @unique
+  phoneNumber   String
+  callDuration  Int?
+  callSid       String?
+  recordingUrl  String?
+  transcription String?
+  voiceData     String?
+  status        String    @default("initiated")
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+  complaint     Complaint @relation(fields: [complaintId], references: [id], onDelete: Cascade)
+
+  @@index([phoneNumber])
+  @@index([callSid])
+  @@index([status])
+  @@map("voice_calls")
+}
+
+model ActivityLog {
+  id          String   @id @default(uuid())
+  entityType  String
+  entityId    String
+  action      String
+  performedBy String?
+  details     String?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
