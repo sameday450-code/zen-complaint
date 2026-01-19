@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
-import { writeFile } from 'fs/promises';
+import { writeFile, mkdir } from 'fs/promises';
 import { join } from 'path';
 import { randomUUID } from 'crypto';
+import { existsSync } from 'fs';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -126,19 +127,25 @@ export async function POST(request: NextRequest) {
     // Handle file uploads
     const files = formData.getAll('files') as File[];
     if (files && files.length > 0) {
+      // Ensure upload directory exists
+      const uploadDir = join(process.cwd(), 'public', 'uploads');
+      if (!existsSync(uploadDir)) {
+        await mkdir(uploadDir, { recursive: true });
+      }
+
       for (const file of files) {
         if (file.size > 0) {
-          const bytes = await file.arrayBuffer();
-          const buffer = Buffer.from(bytes);
-          
-          const fileName = `${randomUUID()}-${file.name}`;
-          const uploadDir = join(process.cwd(), 'public', 'uploads');
-          const filePath = join(uploadDir, fileName);
-          
-          // Note: In production, you should use cloud storage (S3, Cloudflare R2, etc.)
           try {
+            const bytes = await file.arrayBuffer();
+            const buffer = Buffer.from(bytes);
+            
+            const fileName = `${randomUUID()}-${file.name}`;
+            const filePath = join(uploadDir, fileName);
+            
+            // Write file to disk
             await writeFile(filePath, buffer);
             
+            // Save file metadata to database
             await prisma.mediaFile.create({
               data: {
                 complaintId: complaint.id,
@@ -150,9 +157,11 @@ export async function POST(request: NextRequest) {
                 storageKey: fileName,
               },
             });
+            
+            console.log(`✅ File uploaded: ${fileName}`);
           } catch (fileError) {
-            console.error('File upload error:', fileError);
-            // Continue even if file upload fails
+            console.error('❌ File upload error:', fileError);
+            // Continue processing other files even if one fails
           }
         }
       }

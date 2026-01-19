@@ -260,6 +260,17 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
                         </div>
 
                         <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => setSelectedComplaint(complaint)}
+                                className="px-4 py-2.5 text-sm font-medium bg-blue-500 text-white rounded-xl hover:bg-blue-600 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all flex items-center gap-2"
+                                title="View details"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                View
+                            </button>
                             <select
                                 value={complaint.status}
                                 onChange={(e) => updateStatus(complaint.id, e.target.value)}
@@ -284,6 +295,113 @@ export default function ComplaintList({ socket, stationId, onStatsUpdate }: Prop
                     </div>
                 </div>
             ))}
+
+            {/* Detail Modal */}
+            {selectedComplaint && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedComplaint(null)}>
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-t-2xl">
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-2xl font-bold">Complaint Details</h2>
+                                <button
+                                    onClick={() => setSelectedComplaint(null)}
+                                    className="p-2 hover:bg-white/20 rounded-lg transition-colors"
+                                >
+                                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="p-6 space-y-6">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Customer Name</label>
+                                    <p className="text-lg font-bold text-gray-900">{selectedComplaint.customerName}</p>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Phone</label>
+                                    <p className="text-lg font-bold text-gray-900">{selectedComplaint.customerPhone}</p>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Station</label>
+                                    <p className="text-lg font-bold text-gray-900">{selectedComplaint.station.name}</p>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Category</label>
+                                    <p className="text-lg font-bold text-gray-900">{selectedComplaint.category}</p>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Status</label>
+                                    <p className={`inline-block px-3 py-1 rounded-lg text-sm font-semibold ${getStatusColor(selectedComplaint.status)}`}>
+                                        {selectedComplaint.status.toUpperCase()}
+                                    </p>
+                                </div>
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600">Submission Method</label>
+                                    <p className="text-lg font-bold text-gray-900">{selectedComplaint.submissionMethod === 'voice_call' ? '🎤 Voice' : '📱 QR Code'}</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-sm font-semibold text-gray-600">Description</label>
+                                <p className="mt-2 p-4 bg-gray-50 rounded-lg text-gray-800">{selectedComplaint.description}</p>
+                            </div>
+
+                            {selectedComplaint.mediaFiles.length > 0 && (
+                                <div>
+                                    <label className="text-sm font-semibold text-gray-600 mb-3 block">Media Files ({selectedComplaint.mediaFiles.length})</label>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        {selectedComplaint.mediaFiles.map((media: any) => (
+                                            <div key={media.id} className="border-2 border-gray-200 rounded-lg overflow-hidden hover:border-blue-400 transition-colors">
+                                                {media.fileType.startsWith('image/') ? (
+                                                    <img
+                                                        src={media.fileUrl}
+                                                        alt={media.originalName}
+                                                        className="w-full h-48 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+                                                        onClick={() => window.open(media.fileUrl, '_blank')}
+                                                    />
+                                                ) : media.fileType.startsWith('video/') ? (
+                                                    <video
+                                                        src={media.fileUrl}
+                                                        controls
+                                                        className="w-full h-48 object-cover"
+                                                    />
+                                                ) : (
+                                                    <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                                                        <svg className="w-16 h-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                                        </svg>
+                                                    </div>
+                                                )}
+                                                <div className="p-3 bg-gray-50">
+                                                    <p className="text-sm font-medium text-gray-900 truncate">{media.originalName}</p>
+                                                    <p className="text-xs text-gray-500">{(media.fileSize / 1024).toFixed(1)} KB</p>
+                                                    <a
+                                                        href={media.fileUrl}
+                                                        download={media.originalName}
+                                                        className="mt-2 inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                                                    >
+                                                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                        </svg>
+                                                        Download
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="text-sm text-gray-500">
+                                <p>Created: {new Date(selectedComplaint.createdAt).toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
