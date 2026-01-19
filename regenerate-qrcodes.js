@@ -80,7 +80,7 @@ async function regenerateQRCodes() {
     for (const station of stations) {
       const qrCodeFileName = `${station.id}.png`;
       const qrCodePath = path.join(qrCodeDir, qrCodeFileName);
-      const complaintFormUrl = `${baseUrl}/complaint/${station.id}`;
+      const complaintFormUrl = `${baseUrl}/report/${station.id}`;
 
       await QRCode.toFile(qrCodePath, complaintFormUrl, {
         width: 400,

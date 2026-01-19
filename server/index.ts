@@ -48,6 +48,26 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
+// Real-time notification endpoint (for Next.js API routes to trigger WebSocket events)
+app.post('/api/notify', express.json(), (req, res) => {
+  const { type, complaint, notification } = req.body;
+  
+  if (type === 'new-complaint' && complaint) {
+    // Emit to all connected admin clients
+    io.to('admin-room').emit('new-complaint', complaint);
+    io.to('admin-room').emit('notification', {
+      title: 'New Complaint Received',
+      message: `New complaint from ${complaint.customerName} at ${complaint.station}`,
+      type: 'new_complaint',
+      timestamp: new Date().toISOString(),
+    });
+  } else if (notification) {
+    io.to('admin-room').emit('notification', notification);
+  }
+  
+  res.json({ success: true });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/stations', stationRoutes);

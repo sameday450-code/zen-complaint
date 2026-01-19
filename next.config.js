@@ -14,6 +14,16 @@ const nextConfig = {
       },
     ],
   },
+  // Redirect old complaint routes to new report routes
+  async redirects() {
+    return [
+      {
+        source: '/complaint/:stationId',
+        destination: '/report/:stationId',
+        permanent: true,
+      },
+    ];
+  },
   // Ensure API routes work properly in production
   async headers() {
     return [

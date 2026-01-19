@@ -168,6 +168,31 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // Trigger real-time notification to WebSocket server
+    try {
+      const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:4000';
+      await fetch(`${wsUrl}/api/notify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'new-complaint',
+          complaint: {
+            id: complaint.id,
+            customerName: complaint.customerName,
+            category: complaint.category,
+            station: station.name,
+            createdAt: complaint.createdAt,
+          },
+        }),
+      }).catch(() => {
+        // Silently fail if WebSocket server is not available
+        console.log('WebSocket notification skipped (server offline)');
+      });
+    } catch (wsError) {
+      // Continue even if WebSocket notification fails
+      console.log('WebSocket notification failed:', wsError);
+    }
+
     return NextResponse.json(complaint, { status: 201 });
   } catch (error: any) {
     console.error('Create complaint error:', error);

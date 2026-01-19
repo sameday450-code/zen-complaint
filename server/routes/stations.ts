@@ -153,7 +153,7 @@ router.post(
     // QR code contains the complaint form URL with station ID
     // Use local network IP for dev, production URL otherwise
     const baseUrl = getBaseUrl();
-    const complaintFormUrl = `${baseUrl}/complaint/${station.id}`;
+    const complaintFormUrl = `${baseUrl}/report/${station.id}`;
     
     console.log(`📱 QR Code generated for station "${name}" at: ${complaintFormUrl}`);
     
