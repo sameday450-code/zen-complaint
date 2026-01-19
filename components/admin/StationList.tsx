@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Socket } from 'socket.io-client';
 import EditStationModal from './EditStationModal';
+import ViewAllStationsModal from './ViewAllStationsModal';
 
 interface Station {
   id: string;
@@ -26,6 +27,7 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
   const [stations, setStations] = useState<Station[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingStation, setEditingStation] = useState<Station | null>(null);
+  const [showAllStations, setShowAllStations] = useState(false);
 
   useEffect(() => {
     loadStations();
@@ -159,6 +161,30 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
         </div>
       </button>
 
+      {/* View All Stations Button */}
+      <button
+        onClick={() => setShowAllStations(true)}
+        className="w-full text-left p-5 rounded-xl transition-all duration-300 group bg-gradient-to-r from-green-50 to-teal-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md hover:scale-[1.01]"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all bg-gradient-to-br from-green-500 to-teal-500 shadow-lg shadow-green-500/30 group-hover:scale-110">
+              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <div>
+              <h3 className="font-bold text-green-900">View All Stations</h3>
+              <p className="text-sm text-gray-600">See complete station list</p>
+            </div>
+          </div>
+          <svg className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </button>
+
       {stations.map((station) => (
         <div
           key={station.id}
@@ -242,6 +268,13 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
           </div>
         </div>
       ))}
+
+      {/* View All Stations Modal */}
+      {showAllStations && (
+        <ViewAllStationsModal
+          onClose={() => setShowAllStations(false)}
+        />
+      )}
     </div>
   );
 }

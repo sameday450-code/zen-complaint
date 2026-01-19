@@ -7,6 +7,7 @@ import StationList from '@/components/admin/StationList';
 import ComplaintList from '@/components/admin/ComplaintList';
 import NotificationBell from '@/components/admin/NotificationBell';
 import AddStationModal from '@/components/admin/AddStationModal';
+import ViewAllStationsModal from '@/components/admin/ViewAllStationsModal';
 
 interface Admin {
     id: string;
@@ -20,6 +21,7 @@ export default function AdminDashboard() {
     const [socket, setSocket] = useState<Socket | null>(null);
     const [selectedStation, setSelectedStation] = useState<string | null>(null);
     const [showAddStation, setShowAddStation] = useState(false);
+    const [showAllStations, setShowAllStations] = useState(false);
     const [stats, setStats] = useState({
         totalStations: 0,
         totalComplaints: 0,
@@ -177,9 +179,16 @@ export default function AdminDashboard() {
                             </div>
                         </div>
                         <div className="mt-4 pt-4 border-t border-gray-100">
-                            <p className="text-xs text-gray-500 flex items-center gap-1">
-                                <span className="text-green-600">●</span> All active locations
-                            </p>
+                            <button
+                                onClick={() => setShowAllStations(true)}
+                                className="w-full px-3 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all flex items-center justify-center gap-2"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                View All Stations
+                            </button>
                         </div>
                     </div>
 
@@ -292,6 +301,13 @@ export default function AdminDashboard() {
                         setShowAddStation(false);
                         loadStats();
                     }}
+                />
+            )}
+
+            {/* View All Stations Modal */}
+            {showAllStations && (
+                <ViewAllStationsModal
+                    onClose={() => setShowAllStations(false)}
                 />
             )}
         </div>
