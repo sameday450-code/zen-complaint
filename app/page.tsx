@@ -5,6 +5,9 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SuccessModal from './SuccessModal';
 
+// Force dynamic rendering to prevent static generation issues
+export const dynamic = 'force-dynamic';
+
 function HomeContent() {
     const searchParams = useSearchParams();
     const [showModal, setShowModal] = useState(false);
