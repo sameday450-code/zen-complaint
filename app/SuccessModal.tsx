@@ -17,8 +17,8 @@ export default function SuccessModal() {
 
     const closeModal = () => {
         setShowSuccessModal(false);
-        // Remove success parameter from URL
-        router.replace('/');
+        // Clear the URL without showing home page
+        window.history.replaceState({}, '', '/');
     };
 
     if (!showSuccessModal) return null;
