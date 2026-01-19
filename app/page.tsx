@@ -5,7 +5,7 @@ import { Suspense, useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import SuccessModal from './SuccessModal';
 
-export default function HomePage() {
+function HomeContent() {
     const searchParams = useSearchParams();
     const [showModal, setShowModal] = useState(false);
 
@@ -292,5 +292,20 @@ export default function HomePage() {
                 </>
             )}
         </div>
+    );
+}
+
+export default function HomePage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-blue-50">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading...</p>
+                </div>
+            </div>
+        }>
+            <HomeContent />
+        </Suspense>
     );
 }
