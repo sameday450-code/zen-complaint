@@ -133,57 +133,56 @@ export default function StationList({ socket, selectedStation, onSelectStation, 
         />
       )}
 
-      {/* All Complaints Option */}
-      <button
-        onClick={() => onSelectStation(null)}
-        className={`w-full text-left p-5 rounded-xl transition-all duration-300 group ${selectedStation === null
-          ? 'bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-500 shadow-lg scale-[1.02]'
-          : 'bg-white border-2 border-gray-200 hover:border-blue-300 hover:shadow-md hover:scale-[1.01]'
-          }`}
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all ${selectedStation === null
-              ? 'bg-gradient-to-br from-blue-500 to-purple-500 shadow-lg shadow-blue-500/30'
-              : 'bg-gray-100 group-hover:bg-blue-100'
-              }`}>
-              <svg className={`w-5 h-5 ${selectedStation === null ? 'text-white' : 'text-gray-600 group-hover:text-blue-600'
-                }`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-              </svg>
+      {/* Premium View All Stations Button */}
+      <div className="relative overflow-hidden rounded-2xl">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 opacity-90"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAwIDEwIEwgNDAgMTAgTSAxMCAwIEwgMTAgNDAgTSAwIDIwIEwgNDAgMjAgTSAyMCAwIEwgMjAgNDAgTSAwIDMwIEwgNDAgMzAgTSAzMCAwIEwgMzAgNDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMC4yIiBvcGFjaXR5PSIwLjEiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-30"></div>
+        <button
+          onClick={() => setShowAllStations(true)}
+          className="relative w-full text-left p-6 transition-all duration-500 group hover:scale-[1.02] active:scale-[0.98]"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4 flex-1">
+              <div className="relative">
+                <div className="absolute inset-0 bg-white/30 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
+                <div className="relative w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/40 shadow-2xl group-hover:rotate-6 group-hover:scale-110 transition-all duration-500">
+                  <svg className="w-7 h-7 text-white drop-shadow-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex-1">
+                <h3 className="text-xl font-bold text-white drop-shadow-lg flex items-center gap-2">
+                  View All Stations
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-white/20 backdrop-blur-sm text-white border border-white/30">
+                    {stations.length}
+                  </span>
+                </h3>
+                <p className="text-sm text-white/90 mt-1 drop-shadow">Explore complete station directory with details & QR codes</p>
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <span className="text-xs text-white/80">Live Data</span>
+                  </div>
+                  <span className="text-white/40">•</span>
+                  <span className="text-xs text-white/80">Premium View</span>
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className={`font-bold ${selectedStation === null ? 'text-blue-900' : 'text-gray-900'
-                }`}>All Stations</h3>
-              <p className="text-sm text-gray-600">View all complaints</p>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-xs text-white/80 uppercase tracking-wider">Click to</span>
+                <span className="text-sm font-bold text-white">Explore</span>
+              </div>
+              <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-white/40 group-hover:translate-x-1 group-hover:bg-white/30 transition-all duration-300">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-      </button>
-
-      {/* View All Stations Button */}
-      <button
-        onClick={() => setShowAllStations(true)}
-        className="w-full text-left p-5 rounded-xl transition-all duration-300 group bg-gradient-to-r from-green-50 to-teal-50 border-2 border-green-300 hover:border-green-400 hover:shadow-md hover:scale-[1.01]"
-      >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg flex items-center justify-center transition-all bg-gradient-to-br from-green-500 to-teal-500 shadow-lg shadow-green-500/30 group-hover:scale-110">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
-            </div>
-            <div>
-              <h3 className="font-bold text-green-900">View All Stations</h3>
-              <p className="text-sm text-gray-600">See complete station list</p>
-            </div>
-          </div>
-          <svg className="w-5 h-5 text-green-600 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-      </button>
+        </button>
+      </div>
 
       {stations.map((station) => (
         <div
