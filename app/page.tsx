@@ -26,11 +26,7 @@ function HomeContent() {
             }}
         >
             {/* Success Modal - shown independently */}
-            {showModal && (
-                <Suspense fallback={null}>
-                    <SuccessModal />
-                </Suspense>
-            )}
+            {showModal && <SuccessModal />}
 
             {/* Home page content - hidden when modal is shown */}
             {!showModal && (

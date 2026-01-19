@@ -1,27 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export default function SuccessModal() {
     const router = useRouter();
-    const searchParams = useSearchParams();
-    const [showSuccessModal, setShowSuccessModal] = useState(false);
-
-    useEffect(() => {
-        // Check if redirected with success parameter
-        if (searchParams.get('success') === 'true') {
-            setShowSuccessModal(true);
-        }
-    }, [searchParams]);
 
     const closeModal = () => {
-        setShowSuccessModal(false);
         // Clear the URL without showing home page
         window.history.replaceState({}, '', '/');
+        router.refresh();
     };
-
-    if (!showSuccessModal) return null;
 
     return (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-[100] animate-fadeIn">

@@ -39,7 +39,6 @@ const nextConfig = {
     ];
   },
   // Optimize for Vercel deployment
-  output: 'standalone',
   poweredByHeader: false,
   compress: true,
 }
