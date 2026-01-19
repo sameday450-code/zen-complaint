@@ -518,7 +518,7 @@ export default function ComplaintFormPage() {
                                 Submit Another Complaint
                             </button>
                             <button
-                                onClick={() => setShowSuccessModal(false)}
+                                onClick={() => window.close()}
                                 className="w-full bg-gray-100 text-gray-700 py-4 px-6 rounded-xl font-semibold text-lg hover:bg-gray-200 transition-all duration-300"
                             >
                                 Close
